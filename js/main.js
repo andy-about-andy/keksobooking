@@ -1,17 +1,21 @@
 // Случайное целое число от min до max включительно
-const randomInteger = (min, max) => {
-  if (min < max && min >= 0 && max > 0) {
-    return Math.floor(Math.random() * (max + 1 - min) + min);
-  }
-};
-
-randomInteger(10, 70);
+// Функция взята из интернета и доработана
+// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
+function getRandomPositiveInteger (a, b) {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+}
+getRandomPositiveInteger(10, 70);
 
 // Случайное число с плавающей точкой из переданного диапазона включительно
-const randomNumber = (min, max, numberSimbols) => {
-  if (min < max && min >= 0 && max > 0) {
-    return (Math.random() * (max + 1 - min) + min).toFixed(numberSimbols);
-  }
-};
-
-randomNumber(2, 30, 3);
+// Функция взята из интернета и доработана
+// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
+function getRandomPositiveFloat (a, b, digits = 1) {
+  const lower = Math.min(Math.abs(a), Math.abs(b));
+  const upper = Math.max(Math.abs(a), Math.abs(b));
+  const result = Math.random() * (upper - lower) + lower;
+  return +result.toFixed(digits);
+}
+getRandomPositiveFloat(2, 30, 3);
