@@ -34,12 +34,12 @@ const CHECKOUT = [
 ];
 
 const FEATURES = [
-  'wifi',
-  'dishwasher',
-  'parking',
-  'washer',
-  'elevator',
-  'conditioner',
+  ' wifi',
+  ' dishwasher',
+  ' parking',
+  ' washer',
+  ' elevator',
+  ' conditioner',
 ];
 
 const DESCRIPTION = [
@@ -85,11 +85,10 @@ const createObject = () => {
   const idNew = id.slice(-zeroLength);
 
   return {
-    author: [
+    author:
       {avatar: `img/avatars/user${idNew}.png`},
-    ],
 
-    offer: [
+    offer:
       {
         title: TITLE[getRandomPositiveInteger(0, TITLE.length - 1)],
         address: `location.${getRandomPositiveFloat(LAT_MIN, LAT_MAX, NUMBER_DOTS_AFTER_POINT)}, location.${getRandomPositiveFloat(LNG_MIN, LNG_MAX, NUMBER_DOTS_AFTER_POINT)}`,
@@ -103,14 +102,11 @@ const createObject = () => {
         description: DESCRIPTION[getRandomPositiveInteger(0, DESCRIPTION.length - 1)],
         photos: getNewArray(PHOTOS),
       },
-    ],
-
-    location: [
+    location:
       {
         lat: getRandomPositiveFloat(LAT_MIN, LAT_MAX, NUMBER_DOTS_AFTER_POINT),
         lng: getRandomPositiveFloat(LNG_MIN, LNG_MAX, NUMBER_DOTS_AFTER_POINT),
       },
-    ],
   };
 };
 

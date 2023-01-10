@@ -1,3 +1,4 @@
 import {generationObjects} from './data.js';
+import {getAnnouncements} from './markup-generation.js';
 
-console.log(generationObjects());
+getAnnouncements(generationObjects());
