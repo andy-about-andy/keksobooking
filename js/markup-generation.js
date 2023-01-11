@@ -36,16 +36,43 @@ const getAnnouncements = (dataAnnouncements) => {
   dataAnnouncements.forEach(({author, offer}) => {
     const announcement = cardElementTemplate.cloneNode(true);
 
+    // Обязательные данные описания объявления
     announcement.querySelector('.popup__title').textContent = offer.title;
     announcement.querySelector('.popup__text--address').textContent = offer.address;
     announcement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
     announcement.querySelector('.popup__type').textContent = TYPE_HOUSING[offer.type];
-    announcement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
-    announcement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout} гостей`;
-    announcement.querySelector('.popup__features').textContent = offer.features;
-    announcement.querySelector('.popup__description').textContent = offer.description;
     getPhotos(offer.photos, announcement);
-    announcement.querySelector('.popup__avatar').src = author.avatar;
+
+    // Необязательные данные описания объявления
+    if (offer.rooms && offer.guests) {
+      announcement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
+    } else {
+      announcement.querySelector('.popup__text--capacity').textContent = '';
+    }
+
+    if (offer.checkin && offer.checkout) {
+      announcement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout} гостей`;
+    } else {
+      announcement.querySelector('.popup__text--time').textContent = '';
+    }
+
+    if (offer.features) {
+      announcement.querySelector('.popup__features').textContent = offer.features;
+    } else {
+      announcement.querySelector('.popup__features').textContent = '';
+    }
+
+    if (offer.description) {
+      announcement.querySelector('.popup__description').textContent = offer.description;
+    } else {
+      announcement.querySelector('.popup__description').textContent = '';
+    }
+
+    if (offer.avatar) {
+      announcement.querySelector('.popup__avatar').src = author.avatar;
+    } else {
+      announcement.querySelector('.popup__avatar').src = 'img/avatars/default.png';
+    }
 
     announcementFragment.append(announcement);
   });
