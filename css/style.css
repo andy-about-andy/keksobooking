@@ -1010,3 +1010,7 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.ad-form__element--text-error {
+ color: #ff5635;
+}
