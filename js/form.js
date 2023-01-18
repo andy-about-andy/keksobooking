@@ -6,6 +6,9 @@ const formTitle = form.querySelector('#title');
 const formPrice = form.querySelector('#price');
 const formRoomNumber = form.querySelector('#room_number');
 const formCapacity = form.querySelector('#capacity');
+const formTypeHousing = form.querySelector('#type');
+const formTimeIn = form.querySelector('#timein');
+const formTimeOut = form.querySelector('#timeout');
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
@@ -15,6 +18,13 @@ const ROOMS_CAPACITY = {
   '2': ['2', '1'],
   '3': ['3', '2', '1'],
   '100': ['0'],
+};
+const MIN_PRICE = {
+  'bungalow': '0',
+  'flat': '1000',
+  'hotel': '3000',
+  'house': '5000',
+  'palace': '10000'
 };
 
 // Активация и деактивация формы
@@ -60,10 +70,40 @@ pristine.addValidator(formPrice, (value) => checkPrice(value, MAX_PRICE), `Це�
 
 // Количество комнат и количество мест
 const valideteRoomNumberCapacity = () => ROOMS_CAPACITY[formRoomNumber.value].includes(formCapacity.value);
-// Сообщение об ошраничениях по выбору помещений от количества человек
+// Сообщение об ограничениях по выбору помещений от количества человек
 const getCapacityErrorMessage = () => `Размещение в ${formRoomNumber.value} ${formRoomNumber.value === '1' ? 'комнате' : 'комнатах'} ${formCapacity.value} ${formCapacity.value === '1' ? 'гостя' : 'гостей'} невозможно`;
 
 pristine.addValidator(formRoomNumber, valideteRoomNumberCapacity, getCapacityErrorMessage);
+
+// Тип жилья
+// Валидация
+const validatePrice = () => formPrice.value >= MIN_PRICE[formTypeHousing.value];
+// Сообщение об ошибке валидации поля с ценой и типа жилья
+const getPriceErrorMessage = () => {
+  if (formPrice.value <= MIN_PRICE[formTypeHousing.value]) {
+    return `Минимальная цена ${MIN_PRICE[formTypeHousing.value]}`;
+  }
+};
+// функция изменения поля с выбором жилья
+const onTypeHousingChange = () => {
+  formPrice.min = MIN_PRICE[formTypeHousing.value];
+  formPrice.placeholder = MIN_PRICE[formTypeHousing.value];
+};
+formTypeHousing.addEventListener('change', onTypeHousingChange);
+
+pristine.addValidator(formPrice, validatePrice, getPriceErrorMessage);
+
+// Время заезда и выезда
+// Функции изменения поля времени
+const onTimeInChange = () => {
+  formTimeOut.value = formTimeIn.value;
+};
+const onTimeOutChange = () => {
+  formTimeIn.value = formTimeOut.value;
+};
+// Функции синхронизации время выезда и время въезда
+formTimeIn.addEventListener('change', onTimeInChange);
+formTimeOut.addEventListener('change', onTimeOutChange);
 
 // отправка формы после валидации
 form.addEventListener('submit', (evt) => {
