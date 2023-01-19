@@ -4,6 +4,7 @@ const mapFilter = document.querySelector('.map__filters');
 
 const formTitle = form.querySelector('#title');
 const formPrice = form.querySelector('#price');
+const sliderElement = form.querySelector('.ad-form__slider');
 const formRoomNumber = form.querySelector('#room_number');
 const formCapacity = form.querySelector('#capacity');
 const formTypeHousing = form.querySelector('#type');
@@ -113,6 +114,33 @@ form.addEventListener('submit', (evt) => {
   if (isValid) {
     form.submit();
   }
+});
+
+// слайдер
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: 0,
+  step: 1000,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value;
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+// изменение значения при использовании слайдера
+sliderElement.noUiSlider.on('update', (value, handle) => {
+  formPrice.value = value[handle];
+});
+// изменение значения при вводе в input
+formPrice.addEventListener('change', function () {
+  sliderElement.noUiSlider.set(this.value);
 });
 
 export {addInactiveState};
