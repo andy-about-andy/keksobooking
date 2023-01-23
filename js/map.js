@@ -12,6 +12,8 @@ const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">Op
 const form = document.querySelector('.ad-form');
 const fromAddress = form.querySelector('#address');
 
+let map = undefined;
+
 // добавляет open source изображение карты от OpenStreetMapб как слой на карту
 const tileLayer = L.tileLayer(
   TILE_LAYER,
@@ -43,9 +45,20 @@ const mainPinMarker = L.marker(
   },
 );
 
-
 // создаёт отдельный слой на карте и добавляет его туда
 const markerGroup = L.layerGroup();
+
+const getMap = () => {
+  if (!map) {
+    map = L.map('map-canvas')
+      .on('load', () => {
+        addInactiveState(true);
+        fromAddress.value = `${COORDINATES_DEFAULT.lat}, ${COORDINATES_DEFAULT.lng}`;
+      })
+      .setView(COORDINATES_DEFAULT, MAP_ZOOM);
+  }
+  return map;
+};
 
 // добавляет на карту метки объявлений "обычные"
 const normalPinMarkers = (ads) => {
@@ -58,7 +71,6 @@ const normalPinMarkers = (ads) => {
       icon: normalPinIcon,
     },
   );
-
   normalmarker
     .addTo(markerGroup)
     .bindPopup(() => getAnnouncements(ads));
@@ -66,6 +78,7 @@ const normalPinMarkers = (ads) => {
 
 // сброс по умолчанию карты
 const resetMap = (ads) => {
+  getMap().setView(COORDINATES_DEFAULT, MAP_ZOOM);
   mainPinMarker.setLatLng(COORDINATES_DEFAULT);
   markerGroup.closePopup();
   markerGroup.clearLayers();
@@ -74,14 +87,8 @@ const resetMap = (ads) => {
 
 // инициализация карты
 const initMap = (ads) => {
-  // создаёт карту
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      addInactiveState(true);
-      fromAddress.value = `${COORDINATES_DEFAULT.lat}, ${COORDINATES_DEFAULT.lng}`;
-    })
-    .setView(COORDINATES_DEFAULT, MAP_ZOOM);
-
+  getMap();
+  addInactiveState(true);
   ads = ads.slice(0, 10);
   resetMap(ads);
 
@@ -98,4 +105,4 @@ const initMap = (ads) => {
   tileLayer.addTo(map);
 };
 
-export {initMap};
+export {initMap, resetMap};
