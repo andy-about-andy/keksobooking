@@ -1,9 +1,15 @@
-import {generationObjects} from './data.js';
-// import {getAnnouncements} from './markup-generation.js';
-// import {addInactiveState} from './form.js';
+import {addInactiveState, getFormValidation} from './form.js';
 import {initMap} from './map.js';
+import {getData} from './api.js';
+import {showAlert} from './util.js';
 
-// addInactiveState(false);
-// getAnnouncements(generationObjects());
-// const data = generationObjects(10);
-initMap(generationObjects(10));
+addInactiveState(false);
+
+getData((ads) => {
+  initMap(ads);
+},
+() => {
+  showAlert('Ошибка сети. Обновите страницу!');
+});
+
+getFormValidation();

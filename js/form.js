@@ -1,3 +1,8 @@
+import {sendData} from './api.js';
+// import {resetMap} from './map.js';
+import {blockSubmitButton, onSuccessSendForm, onErrorSendForm} from './popup-message.js';
+
+
 const form = document.querySelector('.ad-form');
 const elementsForm = document.querySelectorAll('fieldset', 'select');
 const mapFilter = document.querySelector('.map__filters');
@@ -10,6 +15,7 @@ const formCapacity = form.querySelector('#capacity');
 const formTypeHousing = form.querySelector('#type');
 const formTimeIn = form.querySelector('#timein');
 const formTimeOut = form.querySelector('#timeout');
+const formDescription = form.querySelector('#description');
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
@@ -106,28 +112,45 @@ const onTimeOutChange = () => {
 formTimeIn.addEventListener('change', onTimeInChange);
 formTimeOut.addEventListener('change', onTimeOutChange);
 
+// сброс форм по умолчанию
+const resetForm = () => {
+  formTitle.value = '';
+  formPrice.value = '';
+  sliderElement.noUiSlider.set('0');
+  formRoomNumber.selectedIndex = 0;
+  formCapacity.selectedIndex = 2;
+  formTypeHousing.selectedIndex = 0;
+  formTimeIn.selectedIndex = 0;
+  formTimeOut.selectedIndex = 0;
+  formDescription.value = '';
+  // resetMap();
+};
+
 // отправка формы после валидации
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+const getFormValidation = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
 
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
-  }
-});
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(onSuccessSendForm, onErrorSendForm, new FormData(evt.target));
+    }
+  });
+};
 
-// слайдер
+// Слайдер
 noUiSlider.create(sliderElement, {
   range: {
     min: 0,
     max: 100000,
   },
-  start: 0,
+  start: MIN_PRICE[formTypeHousing.value],
   step: 1000,
   connect: 'lower',
   format: {
     to: function (value) {
-      return value;
+      return value.toFixed(0);
     },
     from: function (value) {
       return parseFloat(value);
@@ -143,4 +166,4 @@ formPrice.addEventListener('change', function () {
   sliderElement.noUiSlider.set(this.value);
 });
 
-export {addInactiveState};
+export {addInactiveState, getFormValidation, resetForm};
