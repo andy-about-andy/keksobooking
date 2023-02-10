@@ -1,5 +1,6 @@
-import {isEscapeKey} from './util.js';
+import {isEscapeKey, showAlert} from './util.js';
 import {resetForm} from './form.js';
+import { getData } from './api.js';
 
 const successPopup = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 const errorPopup = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
@@ -77,12 +78,16 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
+// успешная отправка
 const onSuccessSendForm = () => {
   showSuccessPopup();
   unblockSubmitButton();
-  resetForm();
+  getData(resetForm, () => {
+    showAlert('Ошибка сети. Обновите страницу!');
+  });
 };
 
+// ошибка при отправке
 const onErrorSendForm = () => {
   showErrorPopup();
   unblockSubmitButton();

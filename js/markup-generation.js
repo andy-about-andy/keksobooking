@@ -9,7 +9,6 @@ const TYPE_HOUSING = {
 const IMG_WIDTH = '45';
 const IMG_HEIGHT = '40';
 
-// const mapCanvas = document.querySelector('#map-canvas');
 const cardElementTemplate = document.querySelector('#card')
   .content
   .querySelector('.popup');
@@ -29,11 +28,8 @@ const getPhotos = (photos, element) => {
   });
 };
 
-// Генерирует карточку одного (первого) объявления на место карты
+// Генерирует карточку объявления на место карты
 const getAnnouncements = (dataAnnouncements) => {
-  // const announcementFragment = document.createDocumentFragment();
-
-  // dataAnnouncements.forEach(({author, offer}) => {
   const announcement = cardElementTemplate.cloneNode(true);
 
   // Обязательные данные описания объявления
@@ -57,9 +53,17 @@ const getAnnouncements = (dataAnnouncements) => {
   }
 
   if (dataAnnouncements.offer.features) {
-    announcement.querySelector('.popup__features').textContent = dataAnnouncements.offer.features;
+    const modifiers = dataAnnouncements.offer.features.map((feature) => `popup__feature--${feature}`);
+    const popupFeatureItems = announcement.querySelectorAll('.popup__feature');
+
+    popupFeatureItems.forEach((popupFeatureItem) => {
+      const modifier = popupFeatureItem.classList[1];
+      if (!modifiers.includes(modifier)) {
+        popupFeatureItem.remove();
+      }
+    });
   } else {
-    announcement.querySelector('.popup__features').textContent = '';
+    announcement.querySelector('.popup__features').remove();
   }
 
   if (dataAnnouncements.offer.description) {
@@ -75,10 +79,6 @@ const getAnnouncements = (dataAnnouncements) => {
   }
 
   return announcement;
-  // announcementFragment.append(announcement);
-
-
-  // mapCanvas.append(announcementFragment.childNodes[1]);
 };
 
 export {getAnnouncements};
