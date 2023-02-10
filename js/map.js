@@ -9,10 +9,12 @@ const MAP_ZOOM = 12;
 const TILE_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-const form = document.querySelector('.ad-form');
-const fromAddress = form.querySelector('#address');
+const NUMBER_ADS_SHOWN = 10;
 
 let map = undefined;
+
+const form = document.querySelector('.ad-form');
+const fromAddress = form.querySelector('#address');
 
 // добавляет open source изображение карты от OpenStreetMapб как слой на карту
 const tileLayer = L.tileLayer(
@@ -29,13 +31,6 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
-// иконка для похожего объявления
-const normalPinIcon = L.icon({
-  iconUrl: './img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-});
-
 // создаёт маркер
 const mainPinMarker = L.marker(
   COORDINATES_DEFAULT,
@@ -44,6 +39,13 @@ const mainPinMarker = L.marker(
     icon: mainPinIcon,
   },
 );
+
+// иконка для похожего объявления
+const normalPinIcon = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
 
 // создаёт отдельный слой на карте и добавляет его туда
 const markerGroup = L.layerGroup();
@@ -62,16 +64,16 @@ const getMap = () => {
 
 // добавляет на карту метки объявлений "обычные"
 const normalPinMarkers = (ads) => {
-  const normalmarker = L.marker(
+  const normalsMarkers = L.marker(
     {
       lat: ads.location.lat,
-      lng: ads.location.lng,
+      lng: ads.location.lng
     },
     {
       icon: normalPinIcon,
     },
   );
-  normalmarker
+  normalsMarkers
     .addTo(markerGroup)
     .bindPopup(() => getAnnouncements(ads));
 };
@@ -89,7 +91,7 @@ const resetMap = (ads) => {
 const initMap = (ads) => {
   getMap();
   addInactiveState(true);
-  ads = ads.slice(0, 10);
+  ads = ads.slice(0, NUMBER_ADS_SHOWN);
   resetMap(ads);
 
   // добавляет координаты в поле Адрес
@@ -105,4 +107,4 @@ const initMap = (ads) => {
   tileLayer.addTo(map);
 };
 
-export {initMap, resetMap};
+export {initMap, resetMap, normalPinMarkers, NUMBER_ADS_SHOWN};

@@ -1,6 +1,7 @@
 import {sendData} from './api.js';
-// import {resetMap} from './map.js';
+import {resetMap} from './map.js';
 import {blockSubmitButton, onSuccessSendForm, onErrorSendForm} from './popup-message.js';
+import {resetFilters} from './filters.js';
 
 
 const form = document.querySelector('.ad-form');
@@ -15,7 +16,6 @@ const formCapacity = form.querySelector('#capacity');
 const formTypeHousing = form.querySelector('#type');
 const formTimeIn = form.querySelector('#timein');
 const formTimeOut = form.querySelector('#timeout');
-const formDescription = form.querySelector('#description');
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
@@ -114,16 +114,10 @@ formTimeOut.addEventListener('change', onTimeOutChange);
 
 // сброс форм по умолчанию
 const resetForm = () => {
-  formTitle.value = '';
-  formPrice.value = '';
-  sliderElement.noUiSlider.set('0');
-  formRoomNumber.selectedIndex = 0;
-  formCapacity.selectedIndex = 2;
-  formTypeHousing.selectedIndex = 0;
-  formTimeIn.selectedIndex = 0;
-  formTimeOut.selectedIndex = 0;
-  formDescription.value = '';
-  // resetMap();
+  form.reset();
+  resetMap();
+  resetSlider();
+  resetFilters();
 };
 
 // отправка формы после валидации
@@ -134,7 +128,11 @@ const getFormValidation = () => {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      sendData(onSuccessSendForm, onErrorSendForm, new FormData(evt.target));
+      sendData(
+        onSuccessSendForm,
+        onErrorSendForm,
+        new FormData(form)
+      );
     }
   });
 };
@@ -165,5 +163,17 @@ sliderElement.noUiSlider.on('update', (value, handle) => {
 formPrice.addEventListener('change', function () {
   sliderElement.noUiSlider.set(this.value);
 });
+
+// сброс слайдера
+function resetSlider() {
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: 100000,
+    },
+    start: MIN_PRICE[formTypeHousing.value],
+    step: 1000,
+  });
+}
 
 export {addInactiveState, getFormValidation, resetForm};

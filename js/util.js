@@ -1,3 +1,6 @@
+const ALERT_SHOW_TIME = 5000;
+const TIMEOUT_DELAY = 500;
+
 // случайное целое число от min до max включительно
 // Функция взята из интернета и доработана
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -32,8 +35,6 @@ const getNewArray = (array) => {
 };
 
 // показ ошибки в случае проблем при взаимодействии с сервером
-const ALERT_SHOW_TIME = 5000;
-
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -58,4 +59,15 @@ const showAlert = (message) => {
 // проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomPositiveInteger, getRandomPositiveFloat, getNewArray, showAlert, isEscapeKey};
+// Функция для устранения дребезга
+// Функция взята из интернета и доработана
+// Источник - https://www.freecodecamp.org/news/javascript-debounce-example
+function debounce (callback, timeoutDelay = TIMEOUT_DELAY) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+export {getRandomPositiveInteger, getRandomPositiveFloat, getNewArray, showAlert, isEscapeKey, debounce, TIMEOUT_DELAY};

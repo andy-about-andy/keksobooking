@@ -1,9 +1,7 @@
-import {showAlert} from './util.js';
-
 const URL_GET = 'https://26.javascript.pages.academy/keksobooking/data';
 const URL_SEND = 'https://26.javascript.pages.academy/keksobooking';
 
-const getData = async (onSuccess) => {
+const getData = async (onSuccess, onFail) => {
   try {
     const response = await fetch(URL_GET);
     if (!response.ok) {
@@ -12,7 +10,7 @@ const getData = async (onSuccess) => {
     const data = await response.json();
     onSuccess(data);
   } catch (error) {
-    showAlert('Ошибка сети. Обновите страницу!');
+    onFail(error.message);
   }
 };
 
@@ -30,7 +28,7 @@ const sendData = async (onSuccess, onFail, body) => {
     }
     onSuccess();
   } catch (error) {
-    onFail('Не удалось отправить форму объявления. Попробуйте ещё раз!');
+    onFail(error.message);
   }
 };
 
