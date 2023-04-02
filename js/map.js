@@ -13,6 +13,9 @@ const NUMBER_ADS_SHOWN = 10;
 
 let map = undefined;
 
+// создаёт отдельный слой на карте и добавляет его туда
+const markerGroup = L.layerGroup();
+
 const form = document.querySelector('.ad-form');
 const fromAddress = form.querySelector('#address');
 
@@ -47,9 +50,6 @@ const normalPinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-// создаёт отдельный слой на карте и добавляет его туда
-const markerGroup = L.layerGroup();
-
 const getMap = () => {
   if (!map) {
     map = L.map('map-canvas')
@@ -78,7 +78,7 @@ const normalPinMarkers = (ads) => {
     .bindPopup(() => getAnnouncements(ads));
 };
 
-// сброс по умолчанию карты
+// сброс карты (отрисовка новых меток)
 const resetMap = (ads) => {
   getMap().setView(COORDINATES_DEFAULT, MAP_ZOOM);
   mainPinMarker.setLatLng(COORDINATES_DEFAULT);
@@ -87,24 +87,24 @@ const resetMap = (ads) => {
   ads.forEach((ad) => normalPinMarkers(ad));
 };
 
+// добавляет координаты в поле Адрес (координаты)
+mainPinMarker.on('moveend', (evt) => {
+  fromAddress.value = `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
+  map.setView(evt.target.getLatLng(), MAP_ZOOM);
+});
+
 // инициализация карты
 const initMap = (ads) => {
   getMap();
   addInactiveState(true);
-  ads = ads.slice(0, NUMBER_ADS_SHOWN);
-  resetMap(ads);
-
-  // добавляет координаты в поле Адрес
-  mainPinMarker.on('moveend', (evt) => {
-    fromAddress.value = `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
-    map.setView(evt.target.getLatLng(), MAP_ZOOM);
-  });
-  form.addEventListener('reset', () => resetMap(ads));
+  resetMap(ads.slice(0, NUMBER_ADS_SHOWN));
 
   // добавляет маркер на карту
   mainPinMarker.addTo(map);
   markerGroup.addTo(map);
   tileLayer.addTo(map);
+
+  form.addEventListener('reset', () => resetMap(ads));
 };
 
 export {initMap, resetMap, normalPinMarkers, NUMBER_ADS_SHOWN};

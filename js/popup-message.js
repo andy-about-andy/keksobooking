@@ -1,6 +1,7 @@
 import {isEscapeKey, showAlert} from './util.js';
-import {resetForm} from './form.js';
-import { getData } from './api.js';
+import {resetAllForms, resetSlider} from './form.js';
+import {getData} from './api.js';
+import {resetPhotos} from './photo-upload.js';
 
 const successPopup = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 const errorPopup = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
@@ -72,7 +73,7 @@ const blockSubmitButton = () => {
   submitButton.textContent = 'Публикую...';
 };
 
-// разлокирует кнопку "Отправить" после отправки
+// разблокирует кнопку "Отправить" после отправки
 const unblockSubmitButton = () => {
   submitButton.disable = false;
   submitButton.textContent = 'Опубликовать';
@@ -82,9 +83,11 @@ const unblockSubmitButton = () => {
 const onSuccessSendForm = () => {
   showSuccessPopup();
   unblockSubmitButton();
-  getData(resetForm, () => {
+  getData(resetAllForms, () => {
     showAlert('Ошибка сети. Обновите страницу!');
   });
+  resetPhotos();
+  resetSlider();
 };
 
 // ошибка при отправке

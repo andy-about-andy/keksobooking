@@ -3,6 +3,7 @@ import {initMap} from './map.js';
 import {getData} from './api.js';
 import {showAlert} from './util.js';
 import {initFilters, activateFilter} from './filters.js';
+import './photo-upload.js';
 
 addInactiveState(false);
 
@@ -15,4 +16,4 @@ getData((newAds) => {
   showAlert('Ошибка сети. Обновите страницу!');
 });
 
-getFormValidation(addInactiveState);
+getFormValidation();
