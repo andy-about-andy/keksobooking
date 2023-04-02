@@ -14,32 +14,36 @@ const cardElementTemplate = document.querySelector('#card')
   .querySelector('.popup');
 
 // Генерирует элемент "img" для фотографий жилья
-const getPhotos = (photos, element) => {
-  const photoContainer = element.querySelector('.popup__photos');
-  photoContainer.textContent = '';
-  photos.forEach((photo) => {
-    const img = document.createElement('img');
-    img.classList.add('popup__photo');
-    img.src = photo;
-    img.width = IMG_WIDTH;
-    img.height = IMG_HEIGHT;
-    img.alt = 'Фотография жилья';
-    photoContainer.append(img);
-  });
+const getPhotos = (photos) => {
+  const img = document.createElement('img');
+  img.classList.add('popup__photo');
+  img.src = photos;
+  img.width = IMG_WIDTH;
+  img.height = IMG_HEIGHT;
+  img.alt = 'Фотография жилья';
+  return img;
 };
 
 // Генерирует карточку объявления на место карты
 const getAnnouncements = (dataAnnouncements) => {
   const announcement = cardElementTemplate.cloneNode(true);
+  const popupPhotoList = announcement.querySelector('.popup__photos');
+  const popupPhotos = popupPhotoList.querySelector('.popup__photo');
 
   // Обязательные данные описания объявления
   announcement.querySelector('.popup__title').textContent = dataAnnouncements.offer.title;
   announcement.querySelector('.popup__text--address').textContent = dataAnnouncements.offer.address;
   announcement.querySelector('.popup__text--price').textContent = `${dataAnnouncements.offer.price} ₽/ночь`;
   announcement.querySelector('.popup__type').textContent = TYPE_HOUSING[dataAnnouncements.offer.type];
-  getPhotos(dataAnnouncements.offer.photos, announcement);
 
   // Необязательные данные описания объявления
+  if (dataAnnouncements.offer.photos) {
+    dataAnnouncements.offer.photos.forEach((photo) => popupPhotoList.appendChild(getPhotos(photo)));
+  } else {
+    announcement.querySelector('.popup__photos').remove();
+  }
+  popupPhotos.remove();
+
   if (dataAnnouncements.offer.rooms && dataAnnouncements.offer.guests) {
     announcement.querySelector('.popup__text--capacity').textContent = `${dataAnnouncements.offer.rooms} комнаты для ${dataAnnouncements.offer.guests} гостей`;
   } else {

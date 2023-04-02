@@ -2,7 +2,7 @@ import {sendData} from './api.js';
 import {resetMap} from './map.js';
 import {blockSubmitButton, onSuccessSendForm, onErrorSendForm} from './popup-message.js';
 import {resetFilters} from './filters.js';
-
+import {resetPhotos} from './photo-upload.js';
 
 const form = document.querySelector('.ad-form');
 const elementsForm = document.querySelectorAll('fieldset', 'select');
@@ -16,6 +16,8 @@ const formCapacity = form.querySelector('#capacity');
 const formTypeHousing = form.querySelector('#type');
 const formTimeIn = form.querySelector('#timein');
 const formTimeOut = form.querySelector('#timeout');
+
+const resetButtonElement = form.querySelector('.ad-form__reset');
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
@@ -62,7 +64,7 @@ const pristine = new Pristine(form, {
 });
 
 // Валидация формы
-
+//-------------------------------------
 // Заголовок
 // Проверка длины заголовка
 const checkTitleLength = (value, min, max) => value.length >= min && value.length <= max;
@@ -112,11 +114,10 @@ const onTimeOutChange = () => {
 formTimeIn.addEventListener('change', onTimeInChange);
 formTimeOut.addEventListener('change', onTimeOutChange);
 
-// сброс форм по умолчанию
-const resetForm = () => {
+// функция сброса всех параметров на странице (формы, карта)
+const resetAllForms = (ads) => {
+  resetMap(ads);
   form.reset();
-  resetMap();
-  resetSlider();
   resetFilters();
 };
 
@@ -167,13 +168,14 @@ formPrice.addEventListener('change', function () {
 // сброс слайдера
 function resetSlider() {
   sliderElement.noUiSlider.updateOptions({
-    range: {
-      min: 0,
-      max: 100000,
-    },
     start: MIN_PRICE[formTypeHousing.value],
-    step: 1000,
   });
 }
 
-export {addInactiveState, getFormValidation, resetForm};
+// сброс по кнопке "очистить"
+resetButtonElement.addEventListener('click', () => {
+  resetPhotos();
+  resetSlider();
+});
+
+export {addInactiveState, getFormValidation, resetAllForms, resetSlider};
