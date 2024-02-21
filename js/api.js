@@ -1,5 +1,5 @@
-const URL_GET = 'https://26.javascript.pages.academy/keksobooking/data';
-const URL_SEND = 'https://26.javascript.pages.academy/keksobooking';
+const URL_GET = 'https://26.javascript.htmlacademy.pro/keksobooking/data';
+const URL_SEND = 'https://26.javascript.htmlacademy.pro/keksobooking';
 
 const getData = async (onSuccess, onFail) => {
   try {
